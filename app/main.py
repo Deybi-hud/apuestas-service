@@ -16,6 +16,7 @@ import os
 from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI, HTTPException
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
@@ -78,7 +79,7 @@ def readiness():
                 cur.execute("SELECT 1")
         return {"status": "ready"}
     except Exception:
-        return JSONResponse(status_code=503, content{"status": "unavailable"})
+        return JSONResponse(status_code=503, content={"status": "unavailable"})
 
 @app.get("/api/apuestas/eventos")
 def listar_eventos():
