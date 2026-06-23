@@ -66,6 +66,19 @@ class ResolverRequest(BaseModel):
 #   - readiness: ¿está listo para recibir tráfico? Debe verificar la BD.
 # Luego configurar livenessProbe/readinessProbe en el Deployment de EKS.
 
+@app.get("/livez")
+def liveness():
+    return {"status": "ok"}
+
+@app.get("/readyz")
+def readiness():
+    try:
+        with conexion() as conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT 1")
+        return {"status": "ready"}
+    except Exception:
+        return JSONResponse(status_code=503, content{"status": "unavailable"})
 
 @app.get("/api/apuestas/eventos")
 def listar_eventos():
